@@ -1,7 +1,7 @@
-# DetailVault Platform — Claude Guidelines
+# DetailX Platform — Claude Guidelines
 
 ## Project Overview
-DetailVault is a marketplace platform where architecture firms submit building construction details (paid via seed funding) and other companies browse and purchase access to those details. The core UX: users see a photo of the building area where a detail applies, and must pay to unlock the full technical drawings/specs.
+DetailX is a marketplace platform where architecture firms submit building construction details (paid via seed funding) and other companies browse and purchase access to those details. The core UX: users see a photo of the building area where a detail applies, and must pay to unlock the full technical drawings/specs.
 
 ## Tech Stack
 - **Framework**: Next.js 15 (App Router) + TypeScript + Tailwind CSS v4

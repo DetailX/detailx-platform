@@ -28,13 +28,13 @@ export async function FeaturedDetails() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <h2 className="text-3xl font-bold">Featured Details</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Featured Details</h2>
             <p className="mt-3 text-text-muted">
               Recently added to the library.
             </p>
           </div>
           <Link href="/library" className="hidden sm:block">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 rounded-full">
               View All <ArrowRight size={16} />
             </Button>
           </Link>
@@ -48,7 +48,7 @@ export async function FeaturedDetails() {
 
         <div className="mt-8 text-center sm:hidden">
           <Link href="/library">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 rounded-full">
               View All Details <ArrowRight size={16} />
             </Button>
           </Link>

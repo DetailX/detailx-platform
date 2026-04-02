@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
 import { categoryLabels, type Category } from "@/types";
-import { ImageIcon } from "lucide-react";
+import { FileText } from "lucide-react";
 
 interface DetailCardProps {
   detail: {
@@ -21,17 +21,28 @@ interface DetailCardProps {
 export function DetailCard({ detail }: DetailCardProps) {
   return (
     <Link href={`/library/${detail.id}`}>
-      <Card className="group hover:shadow-lg transition-shadow duration-200 h-full">
-        <div className="relative aspect-[4/3] bg-surface-alt overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center text-text-muted">
-            <ImageIcon size={48} strokeWidth={1} />
+      <Card className="group hover:shadow-lg hover:border-accent/20 transition-all duration-300 h-full rounded-2xl">
+        <div className="relative aspect-[4/3] bg-[#0a0e1a] overflow-hidden rounded-t-2xl">
+          {/* Blueprint pattern placeholder */}
+          <div
+            className="absolute inset-0 opacity-[0.12]"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(59,91,255,0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,91,255,0.4) 1px, transparent 1px)
+              `,
+              backgroundSize: "20px 20px",
+            }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <FileText size={40} strokeWidth={1} className="text-white/20" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e1a]/80 to-transparent" />
           <div className="absolute bottom-3 left-3 right-3 flex gap-2">
             <Badge variant="accent">
               {categoryLabels[detail.category as Category] || detail.category}
             </Badge>
-            <Badge variant="default" className="bg-white/20 text-white backdrop-blur-sm">
+            <Badge variant="default" className="bg-white/15 text-white backdrop-blur-sm border-0">
               {detail.buildingType}
             </Badge>
           </div>

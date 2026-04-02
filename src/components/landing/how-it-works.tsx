@@ -1,52 +1,55 @@
-import { Search, Eye, CreditCard } from "lucide-react";
+import { FileText, PenTool, DollarSign, ShieldCheck } from "lucide-react";
 
-const steps = [
+const features = [
   {
-    icon: Search,
-    step: "01",
-    title: "Browse the Library",
-    description:
-      "Explore our growing collection of architectural details, filtered by category — facades, roofing, foundations, and more.",
+    icon: FileText,
+    title: "DWG / PDF Construction Files",
+    description: "Download ready-to-use architectural drawings.",
   },
   {
-    icon: Eye,
-    step: "02",
-    title: "Preview in Context",
-    description:
-      "See a photograph of the building showing exactly where each detail applies. Understand the context before you buy.",
+    icon: PenTool,
+    title: "Expertly Crafted by Architects",
+    description: "High-quality, precision details, from architectural professionals.",
   },
   {
-    icon: CreditCard,
-    step: "03",
-    title: "Purchase & Download",
-    description:
-      "Unlock the full technical detail — CAD drawings, specifications, and calculations. Download instantly.",
+    icon: DollarSign,
+    title: "Earn Passive Income",
+    description: "Earn ongoing revenue every time a detail is purchased.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Trusted by Professionals",
+    description: "A secure platform backed by top architects and firms.",
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="py-20 bg-surface">
+    <section className="py-16 bg-surface">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold">How It Works</h2>
-          <p className="mt-3 text-text-muted max-w-lg mx-auto">
-            From discovery to download in three simple steps.
+        <div className="mb-10">
+          <h2 className="text-2xl font-bold tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            About{" "}
+            <span className="font-extrabold">detail<span className="text-accent">x</span></span>
+          </h2>
+          <p className="mt-3 text-text-muted max-w-2xl text-[15px] leading-relaxed">
+            DetailX is a marketplace where architects can buy and sell high-quality DWG / PDF construction details created by architects.
+            Upload technical drawings from real projects and earn.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {steps.map((step) => (
-            <div key={step.step} className="text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/10">
-                <step.icon className="h-7 w-7 text-accent" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {features.map((feature) => (
+            <div
+              key={feature.title}
+              className="rounded-xl border border-border bg-surface p-5 hover:border-accent/30 hover:shadow-md transition-all duration-200"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-accent/8">
+                <feature.icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
               </div>
-              <span className="text-xs font-bold text-accent tracking-widest uppercase">
-                Step {step.step}
-              </span>
-              <h3 className="mt-2 text-xl font-semibold">{step.title}</h3>
-              <p className="mt-3 text-sm text-text-muted leading-relaxed">
-                {step.description}
+              <h3 className="font-semibold text-[13px] leading-snug">{feature.title}</h3>
+              <p className="mt-1.5 text-[12px] text-text-muted leading-relaxed">
+                {feature.description}
               </p>
             </div>
           ))}

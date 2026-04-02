@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Building2, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function RegisterPage() {
@@ -59,10 +59,10 @@ export default function RegisterPage() {
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Building2 className="h-10 w-10 text-accent mx-auto mb-3" />
+          <span className="text-3xl font-extrabold tracking-tight block mb-3" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>detail<span className="text-accent">x</span></span>
           <h1 className="text-2xl font-bold">Create Account</h1>
           <p className="text-sm text-text-muted mt-1">
-            Join the DetailVault platform
+            Join the DetailX platform
           </p>
         </div>
 
