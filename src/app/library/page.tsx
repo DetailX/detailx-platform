@@ -37,7 +37,7 @@ export default async function LibraryPage({ searchParams }: Props) {
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Detail Library</h1>
         <p className="mt-2 text-text-muted">
-          Browse {allDetails.length} architectural details from verified firms.
+          Browse architectural details from verified firms.
         </p>
       </div>
 
