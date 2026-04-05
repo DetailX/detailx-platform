@@ -5,9 +5,11 @@ import { type Category } from "@/types";
 export function BlurredDetailPreview({
   category,
   seed = "default",
+  blurred = true,
 }: {
   category: string;
   seed?: string;
+  blurred?: boolean;
 }) {
   const rng = makeRng(seed);
   const svgContent = getDetailSvg(category as Category, rng);
@@ -27,16 +29,18 @@ export function BlurredDetailPreview({
         }}
       />
 
-      {/* The detail drawing - blurred */}
+      {/* The detail drawing */}
       <div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ filter: "blur(6px)" }}
+        className="absolute inset-0 flex items-center justify-center p-6"
+        style={blurred ? { filter: "blur(6px)" } : undefined}
       >
         {svgContent}
       </div>
 
       {/* Extra overlay to enhance blurred look */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-white/40" />
+      {blurred && (
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-white/40" />
+      )}
     </div>
   );
 }

@@ -7,7 +7,8 @@ import { PaywallOverlay } from "@/components/detail/paywall-overlay";
 import { UnlockedContent } from "@/components/detail/unlocked-content";
 import { formatPrice } from "@/lib/utils";
 import { categoryLabels, type Category } from "@/types";
-import { ArrowLeft, Building, ImageIcon, Tag } from "lucide-react";
+import { ArrowLeft, Building, Lock, Tag } from "lucide-react";
+import { BlurredDetailPreview } from "@/components/library/blurred-detail-preview";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -70,10 +71,24 @@ export default async function DetailPage({ params }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
         {/* Left column: Preview image */}
         <div className="lg:col-span-3">
-          <div className="relative aspect-[4/3] rounded-xl bg-surface-alt overflow-hidden border border-border">
-            <div className="absolute inset-0 flex items-center justify-center text-text-muted">
-              <ImageIcon size={64} strokeWidth={1} />
-            </div>
+          <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-border">
+            <BlurredDetailPreview
+              category={detail.category}
+              seed={detail.id}
+              blurred={!hasPurchased}
+            />
+            {!hasPurchased && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                    <Lock size={22} className="text-accent" strokeWidth={2.5} />
+                  </div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-accent bg-white/90 px-3 py-1 rounded-full">
+                    Locked — Purchase to View
+                  </span>
+                </div>
+              </div>
+            )}
             <div className="absolute bottom-4 left-4">
               <Badge variant="accent">
                 {categoryLabels[detail.category as Category] || detail.category}
@@ -81,7 +96,9 @@ export default async function DetailPage({ params }: Props) {
             </div>
           </div>
           <p className="mt-3 text-xs text-text-muted italic">
-            Building context photo showing where this detail applies.
+            {hasPurchased
+              ? "Full technical detail drawing."
+              : "Preview of the technical detail — purchase to unlock."}
           </p>
         </div>
 
