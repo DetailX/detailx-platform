@@ -3,7 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
 import { categoryLabels, type Category } from "@/types";
-import { FileText } from "lucide-react";
+import { Lock } from "lucide-react";
+import { BlurredDetailPreview } from "./blurred-detail-preview";
 
 interface DetailCardProps {
   detail: {
@@ -22,27 +23,27 @@ export function DetailCard({ detail }: DetailCardProps) {
   return (
     <Link href={`/library/${detail.id}`}>
       <Card className="group hover:shadow-lg hover:border-accent/20 transition-all duration-300 h-full rounded-2xl">
-        <div className="relative aspect-[4/3] bg-[#0a0e1a] overflow-hidden rounded-t-2xl">
-          {/* Blueprint pattern placeholder */}
-          <div
-            className="absolute inset-0 opacity-[0.12]"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(59,91,255,0.4) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59,91,255,0.4) 1px, transparent 1px)
-              `,
-              backgroundSize: "20px 20px",
-            }}
-          />
+        <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
+          {/* Blurred architectural preview */}
+          <BlurredDetailPreview category={detail.category} />
+
+          {/* Lock icon overlay */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <FileText size={40} strokeWidth={1} className="text-white/20" />
+            <div className="flex flex-col items-center gap-1.5">
+              <div className="w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                <Lock size={18} className="text-accent" strokeWidth={2.5} />
+              </div>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent bg-white/90 px-2 py-0.5 rounded-full">
+                Locked
+              </span>
+            </div>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e1a]/80 to-transparent" />
+
           <div className="absolute bottom-3 left-3 right-3 flex gap-2">
             <Badge variant="accent">
               {categoryLabels[detail.category as Category] || detail.category}
             </Badge>
-            <Badge variant="default" className="bg-white/15 text-white backdrop-blur-sm border-0">
+            <Badge variant="default" className="bg-white/80 text-[#0c1021] backdrop-blur-sm border-0">
               {detail.buildingType}
             </Badge>
           </div>
