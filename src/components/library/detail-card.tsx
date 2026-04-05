@@ -25,7 +25,7 @@ export function DetailCard({ detail }: DetailCardProps) {
       <Card className="group hover:shadow-lg hover:border-accent/20 transition-all duration-300 h-full rounded-2xl">
         <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
           {/* Blurred architectural preview */}
-          <BlurredDetailPreview category={detail.category} />
+          <BlurredDetailPreview category={detail.category} seed={detail.id} />
 
           {/* Lock icon overlay */}
           <div className="absolute inset-0 flex items-center justify-center">

@@ -1,8 +1,16 @@
 import { type Category } from "@/types";
 
-// Architectural detail SVG previews by category — these get blurred behind the paywall
-export function BlurredDetailPreview({ category }: { category: string }) {
-  const svgContent = getDetailSvg(category as Category);
+// Architectural detail SVG previews by category — each card gets a unique
+// procedurally-varied drawing seeded by the detail id.
+export function BlurredDetailPreview({
+  category,
+  seed = "default",
+}: {
+  category: string;
+  seed?: string;
+}) {
+  const rng = makeRng(seed);
+  const svgContent = getDetailSvg(category as Category, rng);
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -33,173 +41,290 @@ export function BlurredDetailPreview({ category }: { category: string }) {
   );
 }
 
-function getDetailSvg(category: Category) {
+// Deterministic seeded RNG so the same detail always renders the same drawing
+function makeRng(seed: string) {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return () => {
+    h ^= h << 13;
+    h ^= h >>> 17;
+    h ^= h << 5;
+    return ((h >>> 0) % 10000) / 10000;
+  };
+}
+
+type Rng = () => number;
+const rand = (r: Rng, min: number, max: number) => min + r() * (max - min);
+const randInt = (r: Rng, min: number, max: number) => Math.floor(rand(r, min, max + 1));
+
+function getDetailSvg(category: Category, r: Rng) {
   const strokeColor = "#1a3dcc";
   const common = {
     stroke: strokeColor,
     strokeWidth: 1.5,
-    fill: "none",
+    fill: "none" as const,
   };
 
   switch (category) {
-    case "facade":
+    case "facade": {
+      const panelRows = randInt(r, 3, 5);
+      const hasCircle = r() > 0.4;
+      const cx = randInt(r, 70, 230);
+      const cy = randInt(r, 60, 140);
+      const cr = randInt(r, 12, 22);
+      const innerX = randInt(r, 45, 60);
+      const innerW = 300 - innerX * 2;
+      const rows = Array.from({ length: panelRows }, (_, i) => 40 + ((i + 1) * 120) / (panelRows + 1));
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Wall sections with cladding layers */}
           <rect x="30" y="20" width="240" height="160" {...common} />
-          <rect x="50" y="40" width="200" height="120" {...common} />
-          {/* Cladding panels */}
-          <line x1="50" y1="70" x2="250" y2="70" {...common} />
-          <line x1="50" y1="100" x2="250" y2="100" {...common} />
-          <line x1="50" y1="130" x2="250" y2="130" {...common} />
-          {/* Insulation hatching */}
-          <line x1="35" y1="25" x2="45" y2="35" {...common} strokeWidth={0.8} />
-          <line x1="35" y1="40" x2="45" y2="50" {...common} strokeWidth={0.8} />
-          <line x1="35" y1="55" x2="45" y2="65" {...common} strokeWidth={0.8} />
-          <line x1="35" y1="70" x2="45" y2="80" {...common} strokeWidth={0.8} />
-          {/* Dimension lines */}
+          <rect x={innerX} y="40" width={innerW} height="120" {...common} />
+          {rows.map((y, i) => (
+            <line key={i} x1={innerX} y1={y} x2={innerX + innerW} y2={y} {...common} />
+          ))}
+          {Array.from({ length: randInt(r, 3, 6) }).map((_, i) => (
+            <line
+              key={i}
+              x1={35}
+              y1={25 + i * 15}
+              x2={45}
+              y2={35 + i * 15}
+              {...common}
+              strokeWidth={0.8}
+            />
+          ))}
           <line x1="30" y1="195" x2="270" y2="195" {...common} />
-          <circle cx="100" cy="80" r="20" {...common} />
-          <text x="95" y="85" fill={strokeColor} fontSize="10">A</text>
+          {hasCircle && <circle cx={cx} cy={cy} r={cr} {...common} />}
+          <text x={cx - 5} y={cy + 5} fill={strokeColor} fontSize="10">
+            {String.fromCharCode(65 + randInt(r, 0, 5))}
+          </text>
         </svg>
       );
-    case "roofing":
+    }
+    case "roofing": {
+      const peakX = randInt(r, 120, 180);
+      const peakY = randInt(r, 30, 60);
+      const baseY = 150;
+      const layers = randInt(r, 2, 4);
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Roof slope */}
-          <polygon points="30,150 150,40 270,150" {...common} />
-          <line x1="30" y1="150" x2="270" y2="150" {...common} />
-          {/* Roof layers */}
-          <polygon points="40,145 150,50 260,145" {...common} />
-          <polygon points="50,140 150,60 250,140" {...common} />
-          {/* Shingles */}
-          <line x1="80" y1="120" x2="220" y2="120" {...common} strokeDasharray="4,4" />
-          <line x1="100" y1="100" x2="200" y2="100" {...common} strokeDasharray="4,4" />
-          {/* Gutter */}
-          <rect x="20" y="150" width="15" height="10" {...common} />
-          <rect x="265" y="150" width="15" height="10" {...common} />
-          <circle cx="150" cy="60" r="15" {...common} />
+          <polygon points={`30,${baseY} ${peakX},${peakY} 270,${baseY}`} {...common} />
+          <line x1="30" y1={baseY} x2="270" y2={baseY} {...common} />
+          {Array.from({ length: layers }).map((_, i) => {
+            const inset = (i + 1) * 10;
+            return (
+              <polygon
+                key={i}
+                points={`${30 + inset},${baseY - inset / 2} ${peakX},${peakY + inset} ${270 - inset},${baseY - inset / 2}`}
+                {...common}
+              />
+            );
+          })}
+          {Array.from({ length: randInt(r, 2, 4) }).map((_, i) => (
+            <line
+              key={i}
+              x1={80 + i * 5}
+              y1={120 - i * 20}
+              x2={220 - i * 5}
+              y2={120 - i * 20}
+              {...common}
+              strokeDasharray="4,4"
+            />
+          ))}
+          <rect x="20" y={baseY} width="15" height="10" {...common} />
+          <rect x="265" y={baseY} width="15" height="10" {...common} />
+          <circle cx={peakX} cy={peakY + 20} r={randInt(r, 10, 18)} {...common} />
         </svg>
       );
-    case "foundation":
+    }
+    case "foundation": {
+      const groundY = randInt(r, 70, 95);
+      const footerW = randInt(r, 120, 160);
+      const footerX = (300 - footerW) / 2;
+      const wallW = randInt(r, 50, 70);
+      const wallX = (300 - wallW) / 2;
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Ground level */}
-          <line x1="10" y1="80" x2="290" y2="80" {...common} strokeWidth={2} />
-          {/* Foundation footer */}
-          <rect x="80" y="80" width="140" height="30" {...common} />
-          <rect x="120" y="110" width="60" height="80" {...common} />
-          {/* Rebar */}
-          <line x1="85" y1="95" x2="215" y2="95" {...common} strokeDasharray="2,3" />
-          <line x1="125" y1="115" x2="125" y2="185" {...common} strokeDasharray="2,3" />
-          <line x1="175" y1="115" x2="175" y2="185" {...common} strokeDasharray="2,3" />
-          {/* Soil hatching */}
-          <line x1="10" y1="80" x2="15" y2="85" {...common} strokeWidth={0.5} />
-          <line x1="25" y1="80" x2="30" y2="85" {...common} strokeWidth={0.5} />
-          <line x1="40" y1="80" x2="45" y2="85" {...common} strokeWidth={0.5} />
-          <line x1="55" y1="80" x2="60" y2="85" {...common} strokeWidth={0.5} />
-          <line x1="240" y1="80" x2="245" y2="85" {...common} strokeWidth={0.5} />
-          <line x1="255" y1="80" x2="260" y2="85" {...common} strokeWidth={0.5} />
-          <line x1="270" y1="80" x2="275" y2="85" {...common} strokeWidth={0.5} />
+          <line x1="10" y1={groundY} x2="290" y2={groundY} {...common} strokeWidth={2} />
+          <rect x={footerX} y={groundY} width={footerW} height={randInt(r, 25, 40)} {...common} />
+          <rect x={wallX} y={groundY + 30} width={wallW} height={randInt(r, 70, 95)} {...common} />
+          <line
+            x1={footerX + 5}
+            y1={groundY + 15}
+            x2={footerX + footerW - 5}
+            y2={groundY + 15}
+            {...common}
+            strokeDasharray="2,3"
+          />
+          {Array.from({ length: randInt(r, 2, 4) }).map((_, i) => {
+            const x = wallX + 5 + i * ((wallW - 10) / Math.max(1, randInt(r, 2, 4) - 1));
+            return <line key={i} x1={x} y1={groundY + 35} x2={x} y2={groundY + 100} {...common} strokeDasharray="2,3" />;
+          })}
+          {Array.from({ length: randInt(r, 5, 10) }).map((_, i) => (
+            <line
+              key={i}
+              x1={10 + i * 28}
+              y1={groundY}
+              x2={15 + i * 28}
+              y2={groundY + 5}
+              {...common}
+              strokeWidth={0.5}
+            />
+          ))}
         </svg>
       );
-    case "insulation":
+    }
+    case "insulation": {
+      const studCount = randInt(r, 3, 5);
+      const waves = randInt(r, 4, 7);
+      const studW = 220 / studCount;
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Wall assembly */}
           <rect x="40" y="30" width="220" height="140" {...common} />
-          <line x1="80" y1="30" x2="80" y2="170" {...common} />
-          <line x1="140" y1="30" x2="140" y2="170" {...common} />
-          <line x1="200" y1="30" x2="200" y2="170" {...common} />
-          {/* Insulation waves */}
-          <path d="M 85 40 Q 95 50 105 40 T 125 40 T 135 40" {...common} />
-          <path d="M 85 60 Q 95 70 105 60 T 125 60 T 135 60" {...common} />
-          <path d="M 85 80 Q 95 90 105 80 T 125 80 T 135 80" {...common} />
-          <path d="M 85 100 Q 95 110 105 100 T 125 100 T 135 100" {...common} />
-          <path d="M 85 120 Q 95 130 105 120 T 125 120 T 135 120" {...common} />
-          <path d="M 85 140 Q 95 150 105 140 T 125 140 T 135 140" {...common} />
-          {/* Studs */}
-          <rect x="145" y="35" width="50" height="130" {...common} />
-          <circle cx="220" cy="100" r="15" {...common} />
+          {Array.from({ length: studCount }).map((_, i) => (
+            <line key={i} x1={40 + (i + 1) * studW} y1="30" x2={40 + (i + 1) * studW} y2="170" {...common} />
+          ))}
+          {Array.from({ length: waves }).map((_, i) => (
+            <path
+              key={i}
+              d={`M 85 ${40 + i * 18} Q 95 ${50 + i * 18} 105 ${40 + i * 18} T 125 ${40 + i * 18} T 135 ${40 + i * 18}`}
+              {...common}
+            />
+          ))}
+          <rect
+            x={145}
+            y={35}
+            width={randInt(r, 35, 60)}
+            height={randInt(r, 110, 135)}
+            {...common}
+          />
+          <circle cx={randInt(r, 200, 240)} cy={randInt(r, 80, 120)} r={randInt(r, 10, 18)} {...common} />
         </svg>
       );
-    case "joints":
+    }
+    case "joints": {
+      const jointX = randInt(r, 130, 170);
+      const jointW = randInt(r, 8, 16);
+      const beads = randInt(r, 2, 4);
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Two wall sections with expansion joint */}
-          <rect x="20" y="40" width="130" height="120" {...common} />
-          <rect x="150" y="40" width="130" height="120" {...common} />
-          {/* Joint detail */}
-          <rect x="145" y="30" width="10" height="140" {...common} />
-          <line x1="145" y1="60" x2="155" y2="60" {...common} />
-          <line x1="145" y1="100" x2="155" y2="100" {...common} />
-          <line x1="145" y1="140" x2="155" y2="140" {...common} />
-          {/* Sealant bead */}
-          <ellipse cx="150" cy="80" rx="6" ry="4" {...common} />
-          <ellipse cx="150" cy="120" rx="6" ry="4" {...common} />
-          <circle cx="150" cy="100" r="25" {...common} />
+          <rect x="20" y="40" width={jointX - 25} height="120" {...common} />
+          <rect x={jointX + jointW - 5} y="40" width={305 - jointX - jointW} height="120" {...common} />
+          <rect x={jointX - 5} y="30" width={jointW} height="140" {...common} />
+          {Array.from({ length: randInt(r, 2, 4) }).map((_, i) => (
+            <line
+              key={i}
+              x1={jointX - 5}
+              y1={60 + i * 30}
+              x2={jointX + jointW - 5}
+              y2={60 + i * 30}
+              {...common}
+            />
+          ))}
+          {Array.from({ length: beads }).map((_, i) => (
+            <ellipse
+              key={i}
+              cx={jointX + jointW / 2 - 5}
+              cy={70 + i * 30}
+              rx={randInt(r, 4, 8)}
+              ry={randInt(r, 3, 5)}
+              {...common}
+            />
+          ))}
+          <circle cx={jointX + jointW / 2 - 5} cy="100" r={randInt(r, 18, 28)} {...common} />
         </svg>
       );
-    case "waterproofing":
+    }
+    case "waterproofing": {
+      const gradeY = randInt(r, 50, 75);
+      const wallX = randInt(r, 90, 120);
+      const wallW = randInt(r, 30, 50);
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Wall and footer below grade */}
-          <line x1="10" y1="60" x2="290" y2="60" {...common} strokeWidth={2} />
-          <rect x="100" y="60" width="40" height="130" {...common} />
-          <rect x="80" y="160" width="80" height="30" {...common} />
-          {/* Waterproof membrane - wavy line */}
-          <path d="M 100 60 Q 95 80 100 100 T 100 140 T 100 180" {...common} strokeWidth={2} />
-          <path d="M 100 180 Q 90 185 80 180" {...common} strokeWidth={2} />
-          {/* Drainage board dots */}
-          <circle cx="90" cy="80" r="1" fill={strokeColor} />
-          <circle cx="88" cy="100" r="1" fill={strokeColor} />
-          <circle cx="90" cy="120" r="1" fill={strokeColor} />
-          <circle cx="88" cy="140" r="1" fill={strokeColor} />
-          <circle cx="90" cy="160" r="1" fill={strokeColor} />
-          {/* Drain pipe */}
-          <circle cx="175" cy="175" r="8" {...common} />
-          <circle cx="175" cy="175" r="4" {...common} />
+          <line x1="10" y1={gradeY} x2="290" y2={gradeY} {...common} strokeWidth={2} />
+          <rect x={wallX} y={gradeY} width={wallW} height={130} {...common} />
+          <rect x={wallX - 20} y={160} width={wallW + 40} height={30} {...common} />
+          <path
+            d={`M ${wallX} ${gradeY} Q ${wallX - 5} ${gradeY + 20} ${wallX} ${gradeY + 40} T ${wallX} ${gradeY + 80} T ${wallX} ${gradeY + 120}`}
+            {...common}
+            strokeWidth={2}
+          />
+          {Array.from({ length: randInt(r, 4, 7) }).map((_, i) => (
+            <circle
+              key={i}
+              cx={wallX - 10}
+              cy={gradeY + 20 + i * 20}
+              r={1}
+              fill={strokeColor}
+            />
+          ))}
+          <circle cx={randInt(r, 160, 220)} cy={175} r={randInt(r, 6, 10)} {...common} />
+          <circle cx={randInt(r, 160, 220)} cy={175} r={randInt(r, 2, 5)} {...common} />
         </svg>
       );
-    case "structural":
+    }
+    case "structural": {
+      const beamY = randInt(r, 80, 110);
+      const colX = randInt(r, 80, 120);
+      const bolts = randInt(r, 3, 6);
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* I-beam connection */}
-          <rect x="40" y="90" width="120" height="20" {...common} />
-          <rect x="90" y="40" width="20" height="120" {...common} />
-          {/* Gusset plate */}
-          <polygon points="60,110 60,130 140,130 140,90 120,90 120,110" {...common} />
-          {/* Bolts */}
-          <circle cx="75" cy="120" r="3" {...common} />
-          <circle cx="95" cy="120" r="3" {...common} />
-          <circle cx="115" cy="120" r="3" {...common} />
-          <circle cx="135" cy="120" r="3" {...common} />
-          <circle cx="75" cy="100" r="3" {...common} />
-          <circle cx="135" cy="100" r="3" {...common} />
-          {/* Weld symbols */}
-          <path d="M 160 100 L 175 100 L 170 95" {...common} />
-          <circle cx="200" cy="100" r="20" {...common} />
+          <rect x="40" y={beamY} width="120" height="20" {...common} />
+          <rect x={colX} y="40" width="20" height="120" {...common} />
+          <polygon
+            points={`${colX - 30},${beamY + 20} ${colX - 30},${beamY + 40} ${colX + 50},${beamY + 40} ${colX + 50},${beamY} ${colX + 30},${beamY} ${colX + 30},${beamY + 20}`}
+            {...common}
+          />
+          {Array.from({ length: bolts }).map((_, i) => (
+            <circle
+              key={i}
+              cx={colX - 25 + i * 15}
+              cy={beamY + 30}
+              r={3}
+              {...common}
+            />
+          ))}
+          {Array.from({ length: randInt(r, 2, 4) }).map((_, i) => (
+            <circle key={`t-${i}`} cx={colX - 25 + i * 25} cy={beamY + 10} r={3} {...common} />
+          ))}
+          <path
+            d={`M 160 ${beamY + 10} L 175 ${beamY + 10} L 170 ${beamY + 5}`}
+            {...common}
+          />
+          <circle cx={randInt(r, 190, 230)} cy={beamY + 10} r={randInt(r, 15, 25)} {...common} />
         </svg>
       );
-    case "mep":
+    }
+    case "mep": {
+      const ductY = randInt(r, 40, 70);
+      const pipeY = randInt(r, 100, 135);
+      const ductH = randInt(r, 20, 40);
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Pipes and ducts */}
           <rect x="30" y="30" width="240" height="140" {...common} strokeDasharray="6,4" />
-          {/* Main duct */}
-          <rect x="50" y="60" width="200" height="30" {...common} />
-          {/* Pipe */}
-          <line x1="60" y1="120" x2="240" y2="120" {...common} strokeWidth={3} />
-          <circle cx="60" cy="120" r="4" {...common} />
-          <circle cx="240" cy="120" r="4" {...common} />
-          {/* Vertical pipe */}
-          <line x1="150" y1="75" x2="150" y2="160" {...common} strokeWidth={2} />
-          <rect x="142" y="150" width="16" height="12" {...common} />
-          {/* Conduit */}
-          <line x1="70" y1="140" x2="230" y2="140" {...common} strokeDasharray="3,3" />
-          <circle cx="180" cy="100" r="18" {...common} />
+          <rect x="50" y={ductY} width="200" height={ductH} {...common} />
+          <line x1="60" y1={pipeY} x2="240" y2={pipeY} {...common} strokeWidth={3} />
+          <circle cx="60" cy={pipeY} r="4" {...common} />
+          <circle cx="240" cy={pipeY} r="4" {...common} />
+          <line x1={randInt(r, 120, 180)} y1={ductY + ductH} x2={randInt(r, 120, 180)} y2={160} {...common} strokeWidth={2} />
+          {Array.from({ length: randInt(r, 1, 3) }).map((_, i) => (
+            <line
+              key={i}
+              x1="70"
+              y1={150 + i * 8}
+              x2="230"
+              y2={150 + i * 8}
+              {...common}
+              strokeDasharray="3,3"
+            />
+          ))}
+          <circle cx={randInt(r, 140, 220)} cy={randInt(r, 80, 120)} r={randInt(r, 12, 22)} {...common} />
         </svg>
       );
+    }
     default:
       return (
         <svg viewBox="0 0 300 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
