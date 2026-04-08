@@ -1,19 +1,19 @@
 export function Logo({
   className = "",
   size = "text-2xl",
-  darkX = false,
+  lightText = false,
 }: {
   className?: string;
   size?: string;
-  darkX?: boolean;
+  lightText?: boolean;
 }) {
   return (
     <span
       className={`${size} leading-none ${className}`}
-      style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800 }}
+      style={{ fontFamily: "var(--font-baloo)", fontWeight: 800 }}
     >
-      <span>detail</span>
-      <span style={{ color: darkX ? "#0c1021" : "#3b5bff" }}>x</span>
+      <span style={{ color: lightText ? "white" : "#0c1021" }}>detail</span>
+      <span style={{ color: "#3b5bff" }}>x</span>
     </span>
   );
 }
