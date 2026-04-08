@@ -39,6 +39,11 @@ export function Footer() {
             </Link>
           </div>
         </div>
+        <div className="mt-4 pt-3 border-t border-white/10 text-center">
+          <p className="text-[12px] text-white/30 tracking-wide">
+            Copyright &copy; 2026 Detailx LLC
+          </p>
+        </div>
       </div>
     </footer>
   );
