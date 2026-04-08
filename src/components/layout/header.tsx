@@ -14,7 +14,7 @@ const navLinks = [
 
 function Logo({ className = "", size = "text-2xl" }: { className?: string; size?: string }) {
   return (
-    <span className={`${size} tracking-tight ${className}`} style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900 }}>
+    <span className={`${size} tracking-tight ${className}`} style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700 }}>
       detail<span className="text-accent">x</span>
     </span>
   );
@@ -30,7 +30,7 @@ export async function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center shrink-0">
-            <span className="text-2xl tracking-tight text-[#0c1021]" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900 }}>
+            <span className="text-2xl tracking-tight text-[#0c1021]" style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700 }}>
               detail<span className="text-accent">x</span>
             </span>
           </Link>
