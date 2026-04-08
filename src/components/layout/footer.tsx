@@ -8,7 +8,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-6">
-            <span className="text-lg font-extrabold tracking-tight shrink-0" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <span className="text-xl tracking-tight shrink-0" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900 }}>
               detail<span className="text-accent">x</span>
             </span>
             <p className="text-[13px] text-white/40 hidden md:block">
@@ -42,7 +42,7 @@ export function Footer() {
         <div className="mt-4 pt-3 border-t border-white/10 text-center">
           <p className="text-[12px] text-white/30 tracking-wide">
             Copyright &copy; 2026{" "}
-            <span className="font-extrabold text-white/40" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <span className="font-extrabold text-white/40" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900 }}>
               detail<span className="text-accent">x</span>
             </span>{" "}
             LLC

@@ -41,7 +41,7 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <span className="text-3xl font-extrabold tracking-tight block mb-3" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>detail<span className="text-accent">x</span></span>
+          <span className="text-3xl tracking-tight block mb-3" style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900 }}>detail<span className="text-accent">x</span></span>
           <h1 className="text-2xl font-bold">Welcome Back</h1>
           <p className="text-sm text-text-muted mt-1">
             Sign in to your DetailX account

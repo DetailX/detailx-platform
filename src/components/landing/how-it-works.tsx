@@ -30,7 +30,7 @@ export function HowItWorks() {
         <div className="mb-10">
           <h2 className="text-2xl font-bold tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             About{" "}
-            <span className="font-extrabold">detail<span className="text-accent">x</span></span>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900 }}>detail<span className="text-accent">x</span></span>
           </h2>
           <p className="mt-3 text-text-muted max-w-2xl text-[15px] leading-relaxed">
             DetailX is a marketplace where architects can buy and sell high-quality DWG / PDF construction details created by architects.
