@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/ui/logo";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function RegisterPage() {
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <span className="text-3xl tracking-tight block mb-3" style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700 }}>detail<span className="text-accent">x</span></span>
+          <Logo size="text-4xl" className="block mb-3" />
           <h1 className="text-2xl font-bold">Create Account</h1>
           <p className="text-sm text-text-muted mt-1">
             Join the DetailX platform

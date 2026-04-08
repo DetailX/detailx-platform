@@ -1,4 +1,5 @@
 import { FileText, PenTool, DollarSign, ShieldCheck } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 const features = [
   {
@@ -29,8 +30,7 @@ export function HowItWorks() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10">
           <h2 className="text-2xl font-bold tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            About{" "}
-            <span style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700 }}>detail<span className="text-accent">x</span></span>
+            About <Logo size="text-2xl" />
           </h2>
           <p className="mt-3 text-text-muted max-w-2xl text-[15px] leading-relaxed">
             DetailX is a marketplace where architects can buy and sell high-quality DWG / PDF construction details created by architects.

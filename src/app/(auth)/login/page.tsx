@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <span className="text-3xl tracking-tight block mb-3" style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700 }}>detail<span className="text-accent">x</span></span>
+          <Logo size="text-4xl" className="block mb-3" />
           <h1 className="text-2xl font-bold">Welcome Back</h1>
           <p className="text-sm text-text-muted mt-1">
             Sign in to your DetailX account
