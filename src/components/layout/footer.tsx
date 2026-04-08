@@ -41,7 +41,11 @@ export function Footer() {
         </div>
         <div className="mt-4 pt-3 border-t border-white/10 text-center">
           <p className="text-[12px] text-white/30 tracking-wide">
-            Copyright &copy; 2026 Detailx LLC
+            Copyright &copy; 2026{" "}
+            <span className="font-extrabold text-white/40" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              detail<span className="text-accent">x</span>
+            </span>{" "}
+            LLC
           </p>
         </div>
       </div>
