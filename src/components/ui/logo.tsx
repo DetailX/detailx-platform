@@ -7,13 +7,18 @@ export function Logo({
   size?: string;
   lightText?: boolean;
 }) {
+  const color = lightText ? "rgba(255,255,255,0.85)" : "#0c1021";
   return (
     <span
-      className={`${size} leading-none ${className}`}
-      style={{ fontFamily: "var(--font-baloo)", fontWeight: 800 }}
+      className={`${size} leading-none tracking-tight ${className}`}
+      style={{
+        fontFamily: "var(--font-baloo)",
+        fontWeight: 900,
+        color,
+        letterSpacing: "-0.02em",
+      }}
     >
-      <span style={{ color: lightText ? "white" : "#0c1021" }}>detail</span>
-      <span style={{ color: "#3b5bff" }}>x</span>
+      detailx
     </span>
   );
 }
