@@ -15,8 +15,7 @@ export function Logo({
       style={{ fontFamily: "var(--font-baloo)", fontWeight: 900, lineHeight: 1 }}
       aria-label="detailx"
     >
-      <span style={{ color: textColor }}>detail</span>
-      <span style={{ color: "#3b5bff" }}>x</span>
+      <span style={{ color: textColor }}>detailx</span>
     </span>
   );
 }

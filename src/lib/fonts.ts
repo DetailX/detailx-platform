@@ -1,7 +1,7 @@
-import { Nunito, DM_Sans } from "next/font/google";
+import { Baloo_2, DM_Sans } from "next/font/google";
 
-export const baloo = Nunito({
-  weight: ["900"],
+export const baloo = Baloo_2({
+  weight: ["800"],
   subsets: ["latin"],
   display: "swap",
   variable: "--font-baloo",
