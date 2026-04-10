@@ -13,8 +13,9 @@ export function Logo({
 
   return (
     <span
-      className={`inline-flex items-baseline leading-none ${size} ${className}`}
+      className={`inline-flex items-center leading-none ${size} ${className}`}
       aria-label="detailx"
+      style={{ lineHeight: 1 }}
     >
       {/* "detai" in Nunito Black */}
       <span
@@ -23,19 +24,20 @@ export function Logo({
           fontWeight: 900,
           color,
           letterSpacing: "-0.01em",
+          lineHeight: 1,
         }}
       >
         detai
       </span>
 
-      {/* Custom "lx" SVG ligature — l foot curves into x */}
+      {/* Custom "lx" SVG ligature */}
       <svg
         viewBox="0 0 78 76"
         style={{
-          height: "0.88em",
+          height: "1em",
           width: "auto",
-          display: "inline-block",
-          verticalAlign: "-0.06em",
+          display: "block",
+          flexShrink: 0,
           marginLeft: "-0.01em",
         }}
         aria-hidden="true"
@@ -48,12 +50,12 @@ export function Logo({
           fill="none"
         >
           {/* l — vertical stroke */}
-          <line x1="14" y1="5" x2="14" y2="50" />
-          {/* l foot — curves right and connects into x's bottom-left */}
+          <line x1="14" y1="6" x2="14" y2="50" />
+          {/* l foot — curves right into x's bottom-left */}
           <path d="M 14 50 Q 24 68 42 57" />
-          {/* x — top-left to bottom-right diagonal */}
+          {/* x — top-left to bottom-right */}
           <line x1="42" y1="20" x2="70" y2="57" />
-          {/* x — top-right to bottom-left diagonal (bottom-left shares l foot endpoint) */}
+          {/* x — top-right to bottom-left (shares endpoint with l foot) */}
           <line x1="70" y1="20" x2="42" y2="57" />
         </g>
       </svg>
