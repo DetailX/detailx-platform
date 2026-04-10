@@ -1,5 +1,3 @@
-"use client";
-
 export function Logo({
   className = "",
   size = "text-2xl",
@@ -12,51 +10,60 @@ export function Logo({
   const color = lightText ? "rgba(255,255,255,0.85)" : "#0c1021";
 
   return (
+    // Outer span carries the Tailwind size class so 1em on the SVG picks up the right px
     <span
-      className={`inline-flex items-center leading-none ${size} ${className}`}
+      className={`inline-block leading-none ${size} ${className}`}
+      style={{ lineHeight: 0 }}
       aria-label="detailx"
-      style={{ lineHeight: 1 }}
     >
-      {/* "detai" in Nunito Black */}
-      <span
-        style={{
-          fontFamily: "var(--font-baloo)",
-          fontWeight: 900,
-          color,
-          letterSpacing: "-0.01em",
-          lineHeight: 1,
-        }}
-      >
-        detai
-      </span>
-
-      {/* Custom "lx" SVG ligature */}
       <svg
-        viewBox="0 0 78 76"
-        style={{
-          height: "1em",
-          width: "auto",
-          display: "block",
-          flexShrink: 0,
-          marginLeft: "-0.01em",
-        }}
+        viewBox="0 0 335 88"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ height: "1em", width: "auto", display: "block", overflow: "visible" }}
         aria-hidden="true"
       >
+        {/*
+          "detai" — SVG <text> using the Nunito Black CSS variable loaded by next/font.
+          Inline SVGs inherit CSS variables from the page so this works.
+          textLength pins the width so the lx paths align precisely every time.
+        */}
+        <text
+          x="0"
+          y="72"
+          fill={color}
+          fontSize="80"
+          fontWeight="900"
+          textLength="232"
+          lengthAdjust="spacingAndGlyphs"
+          style={{ fontFamily: "var(--font-baloo)" }}
+        >
+          detai
+        </text>
+
+        {/*
+          "lx" — hand-drawn stroked paths.
+          The foot of the l shares its endpoint with the bottom-left of the x,
+          creating the seamless connection seen in the brand logo.
+          strokeWidth 20 matches the thick stems of Nunito Black at 80px.
+        */}
         <g
           stroke={color}
-          strokeWidth="12"
+          strokeWidth="20"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
         >
-          {/* l — vertical stroke */}
-          <line x1="14" y1="6" x2="14" y2="50" />
-          {/* l foot — curves right into x's bottom-left */}
-          <path d="M 14 50 Q 24 68 42 57" />
-          {/* x — top-left to bottom-right */}
-          <line x1="42" y1="20" x2="70" y2="57" />
-          {/* x — top-right to bottom-left (shares endpoint with l foot) */}
-          <line x1="70" y1="20" x2="42" y2="57" />
+          {/* l — tall vertical stem */}
+          <line x1="246" y1="13" x2="246" y2="60" />
+
+          {/* l foot — sweeps right and flows into x's bottom-left arm */}
+          <path d="M 246 60 Q 258 80 276 68" />
+
+          {/* x — top-left to bottom-right diagonal */}
+          <line x1="276" y1="30" x2="318" y2="68" />
+
+          {/* x — top-right to bottom-left diagonal (endpoint = l foot endpoint) */}
+          <line x1="318" y1="30" x2="276" y2="68" />
         </g>
       </svg>
     </span>
