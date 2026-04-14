@@ -5,7 +5,7 @@ export const users = sqliteTable("users", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
-  role: text("role", { enum: ["firm", "buyer"] }).notNull().default("buyer"),
+  role: text("role", { enum: ["firm", "buyer", "admin"] }).notNull().default("buyer"),
   firmName: text("firm_name"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
@@ -50,6 +50,23 @@ export const purchases = sqliteTable(
   ]
 );
 
+export const uploads = sqliteTable("uploads", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").references(() => users.id),
+  projectName: text("project_name").notNull(),
+  fileName: text("file_name").notNull(),
+  fileType: text("file_type").notNull(), // pdf, dwg, dxf, jpg, etc.
+  status: text("status", { enum: ["pending", "processing", "completed", "failed"] })
+    .notNull()
+    .default("pending"),
+  location: text("location").notNull(),
+  notes: text("notes"),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
 export type User = typeof users.$inferSelect;
 export type Detail = typeof details.$inferSelect;
 export type Purchase = typeof purchases.$inferSelect;
+export type Upload = typeof uploads.$inferSelect;

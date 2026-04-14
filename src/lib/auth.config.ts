@@ -7,7 +7,17 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+      const role = (auth?.user as { role?: string })?.role;
+
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+      const isOnAdmin = nextUrl.pathname.startsWith("/admin");
+
+      if (isOnAdmin) {
+        if (!isLoggedIn) return false; // redirect to login
+        if (role !== "admin")
+          return Response.redirect(new URL("/dashboard", nextUrl)); // wrong role
+        return true;
+      }
       if (isOnDashboard) {
         if (isLoggedIn) return true;
         return false;

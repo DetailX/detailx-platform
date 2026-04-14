@@ -1,5 +1,5 @@
 import { db } from "./index";
-import { users, details, purchases } from "./schema";
+import { users, details, purchases, uploads } from "./schema";
 import { hashSync } from "bcryptjs";
 import { sql } from "drizzle-orm";
 
@@ -49,6 +49,48 @@ const buyerUsers = [
     role: "buyer" as const,
     firmName: null,
   },
+];
+
+const adminUsers = [
+  {
+    id: "admin-1",
+    name: "Admin User",
+    email: "admin@detailx.com",
+    passwordHash: hashSync("admin123", 10),
+    role: "admin" as const,
+    firmName: null,
+  },
+];
+
+const mockUploads = [
+  // Apr 14 (today) — 3 uploads
+  { id: "upload-1",  userId: "firm-1", projectName: "Marina Tower",          fileName: "facade-section.pdf",     fileType: "pdf", status: "completed",  location: "New York, NY",       notes: "Ventilated rain screen — ready for review.",       createdAt: new Date("2026-04-14T09:15:00") },
+  { id: "upload-2",  userId: "firm-2", projectName: "Marina Tower",          fileName: "foundation-plan.dwg",    fileType: "dwg", status: "processing", location: "New York, NY",       notes: null,                                              createdAt: new Date("2026-04-14T11:30:00") },
+  { id: "upload-3",  userId: "firm-3", projectName: "Marina Tower",          fileName: "mep-diagram.dxf",        fileType: "dxf", status: "pending",    location: "New York, NY",       notes: "Awaiting engineer sign-off.",                     createdAt: new Date("2026-04-14T14:00:00") },
+  // Apr 13 — 2 uploads
+  { id: "upload-4",  userId: "firm-1", projectName: "Civic Center Expansion","fileName": "roof-assembly.pdf",    fileType: "pdf", status: "completed",  location: "Chicago, IL",        notes: null,                                              createdAt: new Date("2026-04-13T08:45:00") },
+  { id: "upload-5",  userId: "firm-2", projectName: "Riverside Condos",      fileName: "insulation-detail.dwg",  fileType: "dwg", status: "failed",     location: "Los Angeles, CA",    notes: "File corrupted — resubmission required.",         createdAt: new Date("2026-04-13T15:20:00") },
+  // Apr 12 — 3 uploads
+  { id: "upload-6",  userId: "firm-1", projectName: "Harbor View",           fileName: "waterproofing-spec.pdf", fileType: "pdf", status: "completed",  location: "Miami, FL",          notes: null,                                              createdAt: new Date("2026-04-12T09:00:00") },
+  { id: "upload-7",  userId: "firm-3", projectName: "Tech Campus Phase 2",   fileName: "structural-joint.dxf",   fileType: "dxf", status: "completed",  location: "San Francisco, CA",  notes: null,                                              createdAt: new Date("2026-04-12T11:00:00") },
+  { id: "upload-8",  userId: "firm-2", projectName: "Tech Campus Phase 2",   fileName: "mep-shaft.dwg",          fileType: "dwg", status: "pending",    location: "San Francisco, CA",  notes: "Pending format check.",                           createdAt: new Date("2026-04-12T16:30:00") },
+  // Apr 11 — 2 uploads
+  { id: "upload-9",  userId: "firm-1", projectName: "Stadium Redevelopment", fileName: "expansion-joint.pdf",    fileType: "pdf", status: "completed",  location: "Chicago, IL",        notes: null,                                              createdAt: new Date("2026-04-11T10:10:00") },
+  { id: "upload-10", userId: "firm-3", projectName: "Airport Terminal C",    fileName: "facade-panel.dxf",       fileType: "dxf", status: "processing", location: "Dallas, TX",         notes: "Large file — processing may take up to 10 min.", createdAt: new Date("2026-04-11T13:45:00") },
+  // Apr 10 — 4 uploads
+  { id: "upload-11", userId: "firm-2", projectName: "Museum Expansion",      fileName: "curtain-wall.dwg",       fileType: "dwg", status: "completed",  location: "Boston, MA",         notes: null,                                              createdAt: new Date("2026-04-10T09:30:00") },
+  { id: "upload-12", userId: "firm-1", projectName: "Museum Expansion",      fileName: "roofing-detail.pdf",     fileType: "pdf", status: "completed",  location: "Boston, MA",         notes: null,                                              createdAt: new Date("2026-04-10T10:00:00") },
+  { id: "upload-13", userId: "firm-3", projectName: "Highrise Tower",        fileName: "pile-cap.dxf",           fileType: "dxf", status: "failed",     location: "New York, NY",       notes: "Schema version mismatch — needs re-export.",      createdAt: new Date("2026-04-10T14:20:00") },
+  { id: "upload-14", userId: "firm-1", projectName: "Highrise Tower",        fileName: "window-install.pdf",     fileType: "pdf", status: "pending",    location: "New York, NY",       notes: null,                                              createdAt: new Date("2026-04-10T16:00:00") },
+  // Apr 9 — 2 uploads
+  { id: "upload-15", userId: "firm-2", projectName: "Corporate HQ",          fileName: "moment-frame.dwg",       fileType: "dwg", status: "completed",  location: "Seattle, WA",        notes: null,                                              createdAt: new Date("2026-04-09T08:00:00") },
+  { id: "upload-16", userId: "firm-3", projectName: "Corporate HQ",          fileName: "firestop-assy.dxf",      fileType: "dxf", status: "completed",  location: "Seattle, WA",        notes: null,                                              createdAt: new Date("2026-04-09T09:30:00") },
+  // Apr 8 — 1 upload
+  { id: "upload-17", userId: "firm-1", projectName: "Waterfront Residences", fileName: "below-grade-wp.pdf",     fileType: "pdf", status: "processing", location: "Miami, FL",          notes: "Follow-up from walk-in consult on Apr 7.",        createdAt: new Date("2026-04-08T11:15:00") },
+  // Earlier — 3 uploads (pre-chart window, still in table)
+  { id: "upload-18", userId: "firm-2", projectName: "University Science Lab", fileName: "slab-grade.dwg",        fileType: "dwg", status: "completed",  location: "Austin, TX",         notes: null,                                              createdAt: new Date("2026-04-05T10:00:00") },
+  { id: "upload-19", userId: "firm-3", projectName: "Convention Center",      fileName: "rainscreen.dxf",        fileType: "dxf", status: "failed",     location: "Las Vegas, NV",      notes: "Client cancelled project — archive only.",        createdAt: new Date("2026-04-03T14:30:00") },
+  { id: "upload-20", userId: "firm-1", projectName: "Luxury Condos",          fileName: "standing-seam.pdf",     fileType: "pdf", status: "completed",  location: "Los Angeles, CA",    notes: null,                                              createdAt: new Date("2026-04-01T09:00:00") },
 ];
 
 const mockDetails = [
@@ -225,16 +267,17 @@ const mockPurchases = [
 async function seed() {
   console.log("Seeding database...");
 
-  // Clear existing data
+  // Clear existing data (uploads first — references users)
+  await db.delete(uploads);
   await db.delete(purchases);
   await db.delete(details);
   await db.delete(users);
 
   // Insert users
-  for (const user of [...firmUsers, ...buyerUsers]) {
+  for (const user of [...firmUsers, ...buyerUsers, ...adminUsers]) {
     await db.insert(users).values(user);
   }
-  console.log(`Inserted ${firmUsers.length + buyerUsers.length} users`);
+  console.log(`Inserted ${firmUsers.length + buyerUsers.length + adminUsers.length} users`);
 
   // Insert details
   for (const detail of mockDetails) {
@@ -247,6 +290,12 @@ async function seed() {
     await db.insert(purchases).values(purchase);
   }
   console.log(`Inserted ${mockPurchases.length} purchases`);
+
+  // Insert uploads
+  for (const upload of mockUploads) {
+    await db.insert(uploads).values(upload);
+  }
+  console.log(`Inserted ${mockUploads.length} uploads`);
 
   console.log("Seeding complete!");
 }
