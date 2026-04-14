@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { Shield, ArrowLeft } from "lucide-react";
+import { AdminSubNav } from "@/components/admin/admin-sub-nav";
 
 export default async function AdminLayout({
   children,
@@ -55,6 +56,8 @@ export default async function AdminLayout({
           </div>
         </div>
       </header>
+
+      <AdminSubNav />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}

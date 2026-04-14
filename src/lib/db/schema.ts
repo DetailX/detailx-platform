@@ -66,7 +66,21 @@ export const uploads = sqliteTable("uploads", {
     .$defaultFn(() => new Date()),
 });
 
+export const userEvents = sqliteTable("user_events", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").references(() => users.id),
+  eventType: text("event_type").notNull(),
+  // login | view_detail | view_library | view_dashboard | search | upload | purchase | download
+  resourceType: text("resource_type"), // 'detail' | 'upload' | 'page' | null
+  resourceId: text("resource_id"),     // ID of the resource, if applicable
+  metadata: text("metadata"),          // JSON string with extra context
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
 export type User = typeof users.$inferSelect;
 export type Detail = typeof details.$inferSelect;
 export type Purchase = typeof purchases.$inferSelect;
 export type Upload = typeof uploads.$inferSelect;
+export type UserEvent = typeof userEvents.$inferSelect;

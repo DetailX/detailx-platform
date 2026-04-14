@@ -32,6 +32,21 @@ async function migrate() {
   `);
 
   console.log("Migration applied: uploads table created.");
+
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS \`user_events\` (
+      \`id\` text PRIMARY KEY NOT NULL,
+      \`user_id\` text,
+      \`event_type\` text NOT NULL,
+      \`resource_type\` text,
+      \`resource_id\` text,
+      \`metadata\` text,
+      \`created_at\` integer NOT NULL,
+      FOREIGN KEY (\`user_id\`) REFERENCES \`users\`(\`id\`) ON UPDATE no action ON DELETE no action
+    )
+  `);
+
+  console.log("Migration applied: user_events table created.");
   await client.close();
 }
 
