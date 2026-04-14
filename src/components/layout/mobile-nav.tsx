@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Session } from "next-auth";
 
 export function MobileNav({ session }: { session: Session | null }) {
+  const isAdmin = session?.user?.role === "admin";
   const [open, setOpen] = useState(false);
 
   return (
@@ -51,6 +52,16 @@ export function MobileNav({ session }: { session: Session | null }) {
                 >
                   Dashboard
                 </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 text-sm font-semibold py-2 text-red-700"
+                  >
+                    <Shield size={14} strokeWidth={2.5} />
+                    Admin Panel
+                  </Link>
+                )}
                 <form action="/api/auth/signout" method="POST">
                   <Button variant="outline" size="sm" className="w-full rounded-full border-[#0c1021]/20 text-[#0c1021]">
                     Sign Out

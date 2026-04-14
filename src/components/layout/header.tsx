@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
 import { MobileNav } from "./mobile-nav";
 import { SignOutButton } from "./sign-out-button";
+import { Shield } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -17,6 +18,7 @@ export { Logo };
 
 export async function Header() {
   const session = await auth();
+  const isAdmin = session?.user?.role === "admin";
 
   return (
     <header className="sticky top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur border-b border-black/5">
@@ -36,6 +38,15 @@ export async function Header() {
                 {link.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="ml-1 flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full transition-colors"
+              >
+                <Shield size={12} strokeWidth={2.5} />
+                Admin
+              </Link>
+            )}
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
