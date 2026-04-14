@@ -62,7 +62,19 @@ const adminUsers = [
   },
 ];
 
-const mockUploads = [
+type UploadStatus = "pending" | "processing" | "completed" | "failed";
+
+const mockUploads: {
+  id: string;
+  userId: string;
+  projectName: string;
+  fileName: string;
+  fileType: string;
+  status: UploadStatus;
+  location: string;
+  notes: string | null;
+  createdAt: Date;
+}[] = [
   // Apr 14 (today) — 3 uploads
   { id: "upload-1",  userId: "firm-1", projectName: "Marina Tower",          fileName: "facade-section.pdf",     fileType: "pdf", status: "completed",  location: "New York, NY",       notes: "Ventilated rain screen — ready for review.",       createdAt: new Date("2026-04-14T09:15:00") },
   { id: "upload-2",  userId: "firm-2", projectName: "Marina Tower",          fileName: "foundation-plan.dwg",    fileType: "dwg", status: "processing", location: "New York, NY",       notes: null,                                              createdAt: new Date("2026-04-14T11:30:00") },

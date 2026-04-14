@@ -19,7 +19,10 @@ export async function GET(req: NextRequest) {
   const sortDir = searchParams.get("sortDir") ?? "desc";
 
   const conditions = [];
-  if (status) conditions.push(eq(uploads.status, status));
+  if (status)
+    conditions.push(
+      eq(uploads.status, status as "pending" | "processing" | "completed" | "failed")
+    );
   if (fileType) conditions.push(eq(uploads.fileType, fileType));
   if (location) conditions.push(like(uploads.location, `%${location}%`));
   if (search) {
