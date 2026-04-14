@@ -9,6 +9,7 @@ import { formatPrice } from "@/lib/utils";
 import { categoryLabels, type Category } from "@/types";
 import { ArrowLeft, Building, Lock, Tag } from "lucide-react";
 import { BlurredDetailPreview } from "@/components/library/blurred-detail-preview";
+import { VerifiedBy } from "@/components/detail/verified-by";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -141,6 +142,8 @@ export default async function DetailPage({ params }: Props) {
           <div className="mt-4 text-xs text-text-muted">
             {fileKeys.length} file{fileKeys.length !== 1 ? "s" : ""} included
           </div>
+
+          <VerifiedBy category={detail.category as Category} />
         </div>
       </div>
 
