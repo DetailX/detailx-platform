@@ -1,4 +1,4 @@
-import { Baloo_2, DM_Sans } from "next/font/google";
+import { Baloo_2, Barlow } from "next/font/google";
 
 export const baloo = Baloo_2({
   weight: ["800"],
@@ -7,9 +7,9 @@ export const baloo = Baloo_2({
   variable: "--font-baloo",
 });
 
-export const dmSans = DM_Sans({
+export const barlow = Barlow({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-dm-sans",
+  variable: "--font-barlow",
 });
