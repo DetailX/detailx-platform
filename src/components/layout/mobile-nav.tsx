@@ -30,6 +30,13 @@ export function MobileNav({ session }: { session: Session | null }) {
               Home
             </Link>
             <Link
+              href="/workflow"
+              onClick={() => setOpen(false)}
+              className="text-sm font-medium py-2 text-[#0c1021]/80"
+            >
+              Workflow
+            </Link>
+            <Link
               href="/library"
               onClick={() => setOpen(false)}
               className="text-sm font-medium py-2 text-[#0c1021]/80"

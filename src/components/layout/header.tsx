@@ -8,6 +8,7 @@ import { Shield } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Home" },
+  { href: "/workflow", label: "Workflow" },
   { href: "/library", label: "Browse Details" },
   { href: "/dashboard/submit", label: "Submit Details" },
   { href: "/library?category=facade", label: "Categories" },
